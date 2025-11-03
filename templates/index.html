@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NIDS Dashboard</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; 
+            background-color: #121212; 
+            color: #e0e0e0;
+            display: flex;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            height: 100vh;
+        }
+        #main-content {
+            display: flex;
+            width: 100%;
+            gap: 20px;
+        }
+        #chart-container {
+            flex-basis: 50%;
+            padding: 20px;
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+        #alerts-container {
+            flex-basis: 50%;
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+        #alerts-log {
+            flex-grow: 1;
+            overflow-y: auto;
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 10px;
+            background-color: #0d0d0d;
+        }
+        .alert-message {
+            padding: 8px;
+            border-bottom: 1px solid #333;
+            color: #ff9a9a; /* Reddish text for alerts */
+            font-family: "Courier New", Courier, monospace;
+            font-size: 0.9em;
+            word-wrap: break-word;
+        }
+        .alert-message:first-child { border-top: none; }
+        h2 { border-bottom: 2px solid #007bff; padding-bottom: 5px; color: #0098ff; }
+
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <div id="main-content">
+        <div id="chart-container">
+            <h2>Live Packet Counts</h2>
+            <canvas id="packetChart"></canvas>
+        </div>
+
+        <div id="alerts-container">
+            <h2>Live Alerts</h2>
+            <div id="alerts-log">
+                </div>
+        </div>
+    </div>
+
+    <script>
+        // 2. Connect to the WebSocket
+        const socket = io();
+
+        // 3. Setup the chart
+        const ctx = document.getElementById('packetChart').getContext('2d');
+        const packetChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [], // e.g., ['TCP', 'UDP', 'ICMP']
+                datasets: [{
+                    label: 'Packet Count',
+                    data: [], // e.g., [10, 5, 20]
+                    backgroundColor: 'rgba(0, 152, 255, 0.6)',
+                    borderColor: 'rgba(0, 152, 255, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                indexAxis: 'y', // Makes it a horizontal bar chart
+                scales: {
+                    x: { 
+                        beginAtZero: true,
+                        ticks: { color: '#e0e0e0' }
+                    },
+                    y: { ticks: { color: '#e0e0e0' } }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        // 4. Listen for 'packet_update' events from the server
+        socket.on('packet_update', function(data) {
+            // data will be {'TCP': 10, 'UDP': 5, 'ICMP': 20}
+            const protocols = Object.keys(data);
+            const counts = Object.values(data);
+
+            // Update chart data
+            packetChart.data.labels = protocols;
+            packetChart.data.datasets[0].data = counts;
+            packetChart.update(); // Redraw the chart
+        });
+
+        // 5. Listen for 'alert' events from the server
+        const alertsLog = document.getElementById('alerts-log');
+        socket.on('alert', function(data) {
+            // data will be {'message': '...'}
+            const alertMsg = document.createElement('div');
+            alertMsg.className = 'alert-message';
+            alertMsg.textContent = data.message;
+
+            // Add the new alert to the top of the log
+            alertsLog.prepend(alertMsg);
+        });
+
+    </script>
+</body>
+</html>

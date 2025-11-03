@@ -1,0 +1,6 @@
+scapy
+cryptography
+matplotlib
+plotext
+flask
+flask-socketio
