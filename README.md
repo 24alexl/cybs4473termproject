@@ -46,7 +46,7 @@ The system features a live web dashboard for monitoring traffic and alerts, and 
 ---
 
 ## 4. File Structure
-
+`
 ├── .devcontainer/
 │ └── devcontainer.json # Config for Codespaces
 ├── templates/
@@ -59,7 +59,7 @@ The system features a live web dashboard for monitoring traffic and alerts, and 
 ├── nids.log # (Generated) Secure log output
 ├── private_key.pem # (Generated) Private RSA key
 └── public_key.pem # (Generated) Public RSA key
-
+`
 
 ---
 
