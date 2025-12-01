@@ -78,9 +78,9 @@ This project is pre-configured for GitHub Codespaces.
 
 Start the NIDS:
 --Run the main script with sudo -E to grant it packet-sniffing permissions while inheriting your Python environment.
-
+```bash
 sudo -E python3 nids.py
-
+```
 
 Access the Dashboard:
 
