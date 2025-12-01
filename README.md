@@ -46,20 +46,20 @@ The system features a live web dashboard for monitoring traffic and alerts, and 
 ---
 
 ## 4. File Structure
-`
+```text
 ├── .devcontainer/
-│ └── devcontainer.json # Config for Codespaces
+│   └── devcontainer.json  # Config for Codespaces
 ├── templates/
-│ └── index.html # Frontend web dashboard
-├── generate_keys.py # (Run once) Creates RSA key pair
-├── nids.py # Main application (Sniffer + Web Server)
-├── secure_logger.py # Class for secure logging
-├── verify_log.py # Script to check log integrity
-├── requirements.txt # Python dependencies
-├── nids.log # (Generated) Secure log output
-├── private_key.pem # (Generated) Private RSA key
-└── public_key.pem # (Generated) Public RSA key
-`
+│   └── index.html         # Frontend web dashboard
+├── generate_keys.py       # (Run once) Creates RSA key pair
+├── nids.py                # Main application (Sniffer + Web Server)
+├── secure_logger.py       # Class for secure logging
+├── verify_log.py          # Script to check log integrity
+├── requirements.txt       # Python dependencies
+├── nids.log               # (Generated) Secure log output
+├── private_key.pem        # (Generated) Private RSA key
+└── public_key.pem         # (Generated) Public RSA key
+```
 
 ---
 
